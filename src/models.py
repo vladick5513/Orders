@@ -1,7 +1,8 @@
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, func, Text, Float, ForeignKey, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from database import Base
 
-Base = DeclarativeBase()
+
 
 class Customers(Base):
     __tablename__ = "customers"
@@ -10,9 +11,9 @@ class Customers(Base):
     email = mapped_column(String, unique=True, index=True)
     phone = mapped_column(String)
     address = mapped_column(Text)
-    created_at = mapped_column(DateTime, server_dafault=func.now())
+    created_at = mapped_column(DateTime, server_default=func.now())
 
-    orders = relationship("Orders", back_populates="customers")
+    orders = relationship("Order", back_populates="customer")
 
 class Product(Base):
     __tablename__ = "products"
@@ -32,7 +33,7 @@ class Order(Base):
     total_amount = mapped_column(Float, nullable=False)
     created_at = mapped_column(DateTime, server_default=func.now())
 
-    customer = relationship("Customer", back_populates="orders")
+    customer = relationship("Customers", back_populates="orders")
     order_items = relationship("OrderItem",  back_populates="order")
 
 class OrderItem(Base):
@@ -46,7 +47,6 @@ class OrderItem(Base):
     created_at = mapped_column(DateTime, server_default=func.now())
 
     order = relationship("Order", back_populates="order_items")
-
     product = relationship("Product")
 
 class Payment(Base):
@@ -61,6 +61,7 @@ class Payment(Base):
     order = relationship("Order")
 
 class Shipping(Base):
+    __tablename__ = "shipping"
     id = mapped_column(Integer, primary_key=True, index=True)
     order_id = mapped_column(Integer, ForeignKey("orders.id"))
     shipping_address = mapped_column(Text, nullable=False)
