@@ -20,6 +20,13 @@ sync_engine = create_engine(
 session_factory = sessionmaker(sync_engine)
 #async_session_factory = async_sessionmaker(async_engine)
 
+def get_db():
+    db = session_factory()
+    try:
+        yield db
+    finally:
+        db.close()
+
 
 
 
