@@ -1,22 +1,12 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from src.models import Customers
-from pydantic import BaseModel
+from api.customers.schemas import CustomerCreate, CustomerUpdate
 
 
-class CustomerCreate(BaseModel):
-    name: str
-    email: str
-    phone: str
-    address: str
-class CustomerUpdate(BaseModel):
-    name: str = None
-    email: str = None
-    phone: str = None
-    address: str = None
 
 def create_customer(db: Session, customer: CustomerCreate):
-    db_customer = Customers(**customer.dict())
+    db_customer = Customers(**customer.model_dump())
     db.add(db_customer)
     db.commit()
     db.refresh(db_customer)
