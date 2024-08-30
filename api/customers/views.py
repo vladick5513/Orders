@@ -7,7 +7,7 @@ from api.customers.schemas import CustomerCreate, CustomerUpdate, CustomerRespon
 router = APIRouter(prefix="/customers", tags=["Customers"])
 
 
-@router.post("/", response_model=int)
+@router.post("/", response_model=CustomerResponse)
 def create_customer_endpoint(customer: CustomerCreate, db: Session = Depends(get_db)):
     return create_customer(db, customer)
 
@@ -17,11 +17,11 @@ def read_customer_endpoint(customer_id: int, db: Session = Depends(get_db)):
     return read_customer(db, customer_id)
 
 # Обновление
-@router.put("/{customer_id}")
+@router.put("/{customer_id}", response_model=CustomerResponse)
 def update_customer_endpoint(customer_id: int, customer: CustomerUpdate, db: Session = Depends(get_db)):
     return update_customer(db, customer_id, customer)
 
 # Удаление
-@router.delete("/{customer_id}")
+@router.delete("/{customer_id}", response_model=CustomerResponse)
 def delete_customer_endpoint(customer_id: int, db: Session = Depends(get_db)):
     return delete_customer(db, customer_id)
