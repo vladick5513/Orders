@@ -1,23 +1,23 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from api.payments.crud import create_payment, read_payment, update_payment, delete_payment
-from api.payments.schemas import PaymentCreate, PaymentUpdate, PaymentResponse
+from api.shipping.crud import create_shipping, read_shipping, update_shipping, delete_shipping
+from api.shipping.schemas import ShippingCreate, ShippingUpdate, ShippingResponse
 from src.database import get_db
 
-router = APIRouter(prefix="/payments", tags=["Payments"])
+router = APIRouter(prefix="/shipping", tags=["Shipping"])
 
-@router.post("/", response_model=int)
-def create_payment_endpoint(payment: PaymentCreate, db: Session = Depends(get_db)):
-    return create_payment(db, payment)
+@router.post("/", response_model=ShippingResponse)
+def create_shipping_endpoint(shipping: ShippingCreate, db: Session = Depends(get_db)):
+    return create_shipping(db, shipping)
 
-@router.get("/{payment_id}", response_model=PaymentResponse)
-def read_payment_endpoint(payment_id: int, db: Session = Depends(get_db)):
-    return read_payment(db, payment_id)
+@router.get("/{shipping_id}", response_model=ShippingResponse)
+def read_shipping_endpoint(shipping_id: int, db: Session = Depends(get_db)):
+    return read_shipping(db, shipping_id)
 
-@router.put("/{payment_id}", response_model=PaymentResponse)
-def update_payment_endpoint(payment_id: int, payment: PaymentUpdate, db: Session = Depends(get_db)):
-    return update_payment(db, payment_id, payment)
+@router.put("/{shipping_id}", response_model=ShippingResponse)
+def update_shipping_endpoint(shipping_id: int, shipping: ShippingUpdate, db: Session = Depends(get_db)):
+    return update_shipping(db, shipping_id, shipping)
 
-@router.delete("/{payment_id}")
-def delete_payment_endpoint(payment_id: int, db: Session = Depends(get_db)):
-    return delete_payment(db, payment_id)
+@router.delete("/{shipping_id}", response_model=ShippingResponse)
+def delete_shipping_endpoint(shipping_id: int, db: Session = Depends(get_db)):
+    return delete_shipping(db, shipping_id)
