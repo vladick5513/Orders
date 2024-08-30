@@ -11,14 +11,14 @@ router = APIRouter(prefix="/products", tags=["Products"])
 def create_product_endpoint(product: ProductCreate,db: Session = Depends(get_db)):
     return create_product(db, product)
 
-@router.get("/{product_id}")
+@router.get("/{product_id}", response_model=ProductResponse)
 def read_product_endpoint(product_id: int, db: Session = Depends(get_db)):
     return read_product(db, product_id)
 
-@router.put("/{product_id}")
+@router.put("/{product_id}", response_model=ProductResponse)
 def update_product_endpoint(product_id: int, product:ProductUpdate, db: Session = Depends(get_db)):
     return update_product(db, product, product_id)
 
-@router.delete("/{product_id}")
+@router.delete("/{product_id}", response_model=ProductResponse)
 def delete_product_endpoint(product_id: int, db: Session = Depends(get_db)):
     return delete_product(db, product_id)
