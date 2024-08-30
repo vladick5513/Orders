@@ -6,7 +6,7 @@ from src.database import get_db
 
 router = APIRouter(prefix="/payments", tags=["Payments"])
 
-@router.post("/", response_model=int)
+@router.post("/", response_model=PaymentResponse)
 def create_payment_endpoint(payment: PaymentCreate, db: Session = Depends(get_db)):
     return create_payment(db, payment)
 
@@ -18,6 +18,6 @@ def read_payment_endpoint(payment_id: int, db: Session = Depends(get_db)):
 def update_payment_endpoint(payment_id: int, payment: PaymentUpdate, db: Session = Depends(get_db)):
     return update_payment(db, payment_id, payment)
 
-@router.delete("/{payment_id}")
+@router.delete("/{payment_id}", response_model=PaymentResponse)
 def delete_payment_endpoint(payment_id: int, db: Session = Depends(get_db)):
     return delete_payment(db, payment_id)
