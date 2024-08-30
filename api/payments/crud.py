@@ -7,7 +7,7 @@ def create_payment(db: Session, payment: PaymentCreate):
     db.add(db_payment)
     db.commit()
     db.refresh(db_payment)
-    return db_payment.id
+    return db_payment
 
 def read_payment(db: Session, payment_id: int):
     return db.query(Payment).filter(Payment.id == payment_id).first()
