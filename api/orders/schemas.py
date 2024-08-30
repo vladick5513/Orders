@@ -9,3 +9,7 @@ class OrderUpdate(BaseModel):
     customer_id: int = None
     status: str = None
     total_amount: float = None
+
+class OrderResponse(OrderCreate):
+    id: int
+    pass
