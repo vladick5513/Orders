@@ -11,7 +11,6 @@ class CustomerUpdate(BaseModel):
     phone: str = None
     address: str = None
 
-class CustomerResponse(BaseModel):
+class CustomerResponse(CustomerCreate):
     id: int
-    name: str
-    email: str
+    pass
