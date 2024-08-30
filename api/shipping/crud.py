@@ -1,31 +1,31 @@
 from sqlalchemy.orm import Session
-from api.shipping.schemas import PaymentCreate, PaymentUpdate
-from src.models import Payment
+from api.shipping.schemas  import ShippingCreate, ShippingUpdate
+from src.models import Shipping
 
-def create_payment(db: Session, payment: PaymentCreate):
-    db_payment = Payment(**payment.dict())
-    db.add(db_payment)
+def create_shipping(db: Session, shipping: ShippingCreate):
+    db_shipping = Shipping(**shipping.dict())
+    db.add(db_shipping)
     db.commit()
-    db.refresh(db_payment)
-    return db_payment.id
+    db.refresh(db_shipping)
+    return db_shipping
 
-def read_payment(db: Session, payment_id: int):
-    return db.query(Payment).filter(Payment.id == payment_id).first()
+def read_shipping(db: Session, shipping_id: int):
+    return db.query(Shipping).filter(Shipping.id == shipping_id).first()
 
-def update_payment(db: Session, payment_id: int, payment: PaymentUpdate):
-    db_payment = db.query(Payment).filter(Payment.id == payment_id).first()
-    if not db_payment:
+def update_shipping(db: Session, shipping_id: int, shipping: ShippingUpdate):
+    db_shipping = db.query(Shipping).filter(Shipping.id == shipping_id).first()
+    if not db_shipping:
         return None
-    for key, value in payment.dict(exclude_unset=True).items():
-        setattr(db_payment, key, value)
+    for key, value in shipping.dict(exclude_unset=True).items():
+        setattr(db_shipping, key, value)
     db.commit()
-    db.refresh(db_payment)
-    return db_payment
+    db.refresh(db_shipping)
+    return db_shipping
 
-def delete_payment(db: Session, payment_id: int):
-    db_payment = db.query(Payment).filter(Payment.id == payment_id).first()
-    if db_payment:
-        db.delete(db_payment)
+def delete_shipping(db: Session, shipping_id: int):
+    db_shipping = db.query(Shipping).filter(Shipping.id == shipping_id).first()
+    if db_shipping:
+        db.delete(db_shipping)
         db.commit()
         return True
     return False
