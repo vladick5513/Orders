@@ -5,7 +5,7 @@ from typing import Optional
 class PaymentBase(BaseModel):
     order_id: int
     amount: float
-    payment_date: datetime
+
 
 class PaymentCreate(PaymentBase):
     pass
