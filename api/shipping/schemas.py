@@ -2,16 +2,16 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 
-class PaymentBase(BaseModel):
+class ShippingBase(BaseModel):
     order_id: int
-    amount: float
-    payment_date: datetime
+    address: str
+    shipping_date: datetime
 
-class PaymentCreate(PaymentBase):
+class ShippingCreate(ShippingBase):
     pass
 
-class PaymentUpdate(PaymentBase):
+class ShippingUpdate(ShippingBase):
     pass
 
-class PaymentResponse(PaymentBase):
+class ShippingResponse(ShippingBase):
     id: int
