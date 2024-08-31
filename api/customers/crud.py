@@ -10,7 +10,7 @@ def create_customer(db: Session, customer: CustomerCreate):
     db.add(db_customer)
     db.commit()
     db.refresh(db_customer)
-    return db_customer.id
+    return db_customer
 
 def read_customer(db: Session, customer_id:int):
     customer = db.query(Customers).filter(Customers.id == customer_id).first()
@@ -34,4 +34,4 @@ def delete_customer(db: Session, customer_id: int):
         raise HTTPException(status_code=404, detail="Customer not found")
     db.delete(db_customer)
     db.commit()
-    return {"ok": True}
+    return db_customer
