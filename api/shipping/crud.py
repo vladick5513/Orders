@@ -1,3 +1,5 @@
+from fastapi import HTTPException
+
 from sqlalchemy.orm import Session
 from api.shipping.schemas  import ShippingCreate, ShippingUpdate
 from src.models import Shipping
@@ -10,7 +12,11 @@ def create_shipping(db: Session, shipping: ShippingCreate):
     return db_shipping
 
 def read_shipping(db: Session, shipping_id: int):
-    return db.query(Shipping).filter(Shipping.id == shipping_id).first()
+    shipping = db.query(Shipping).filter(Shipping.id == shipping_id).first()
+    if shipping is None:
+        raise HTTPException(status_code=404, detail="Shipping not found")
+    return shipping
+
 
 def update_shipping(db: Session, shipping_id: int, shipping: ShippingUpdate):
     db_shipping = db.query(Shipping).filter(Shipping.id == shipping_id).first()
@@ -24,8 +30,6 @@ def update_shipping(db: Session, shipping_id: int, shipping: ShippingUpdate):
 
 def delete_shipping(db: Session, shipping_id: int):
     db_shipping = db.query(Shipping).filter(Shipping.id == shipping_id).first()
-    if db_shipping:
-        db.delete(db_shipping)
-        db.commit()
-        return True
-    return False
+    if db_shipping is None:
+        HTTPException(status_code=404, detail="Shipping not found")
+    return db_shipping
