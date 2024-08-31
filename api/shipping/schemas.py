@@ -1,11 +1,13 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional
+
 
 class ShippingBase(BaseModel):
     order_id: int
-    address: str
+    shipping_address: str
     shipping_date: datetime
+    delivery_date: datetime
+    status: str
 
 class ShippingCreate(ShippingBase):
     pass
@@ -15,3 +17,4 @@ class ShippingUpdate(ShippingBase):
 
 class ShippingResponse(ShippingBase):
     id: int
+    pass
