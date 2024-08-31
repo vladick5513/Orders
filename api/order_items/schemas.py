@@ -5,7 +5,8 @@ class OrderItemBase(BaseModel):
     order_id: int
     product_id: int
     quantity: int
-    price: int
+    price: float
+    total_price: float
 
 class OrderItemCreate(OrderItemBase):
     pass
