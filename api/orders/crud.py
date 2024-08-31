@@ -8,7 +8,7 @@ def create_order(db: Session, order: OrderCreate):
     db.add(db_order)
     db.commit()
     db.refresh(db_order)
-    return db_order.id
+    return db_order
 
 def read_order(db: Session, order_id: int):
     order = db.query(Order).filter(Order.id == order_id).first()
@@ -32,4 +32,4 @@ def delete_order(db: Session, order_id: int):
         raise HTTPException(status_code=404, detail="Order not found")
     db.delete(db_order)
     db.commit()
-    return {"ok": True}
+    return db_order
