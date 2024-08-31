@@ -1,3 +1,5 @@
+from fastapi import HTTPException
+
 from sqlalchemy.orm import Session
 from api.payments.schemas import PaymentCreate, PaymentUpdate
 from src.models import Payment
@@ -10,7 +12,10 @@ def create_payment(db: Session, payment: PaymentCreate):
     return db_payment
 
 def read_payment(db: Session, payment_id: int):
-    return db.query(Payment).filter(Payment.id == payment_id).first()
+    payment = db.query(Payment).filter(Payment.id == payment_id).first()
+    if payment is None:
+        raise HTTPException(status_code=404, detail="Payment not found")
+    return payment
 
 def update_payment(db: Session, payment_id: int, payment: PaymentUpdate):
     db_payment = db.query(Payment).filter(Payment.id == payment_id).first()
@@ -24,8 +29,8 @@ def update_payment(db: Session, payment_id: int, payment: PaymentUpdate):
 
 def delete_payment(db: Session, payment_id: int):
     db_payment = db.query(Payment).filter(Payment.id == payment_id).first()
-    if db_payment:
-        db.delete(db_payment)
-        db.commit()
-        return True
-    return False
+    if db_payment is None:
+        raise HTTPException(status_code=404, detail="Payment not found")
+    db.delete(db_payment)
+    db.commit()
+    return db_payment
