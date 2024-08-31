@@ -5,6 +5,7 @@ from typing import Optional
 class PaymentBase(BaseModel):
     order_id: int
     amount: float
+    payment_method: str
 
 
 class PaymentCreate(PaymentBase):
