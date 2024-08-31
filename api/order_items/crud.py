@@ -9,7 +9,7 @@ def create_order_item(db: Session, order_item: OrderItemCreate):
     db.add(db_order_items)
     db.commit()
     db.refresh(db_order_items)
-    return db_order_items.id
+    return db_order_items
 
 def read_order_item(db: Session, order_item_id: int):
     order_item = db.query(OrderItem).filter(OrderItem.id == order_item_id).first()
@@ -19,7 +19,7 @@ def read_order_item(db: Session, order_item_id: int):
 
 def update_order_item(db: Session, order_item_id: int, order_item: OrderItemUpdate):
     db_order_item = db.query(OrderItem).filter(OrderItem.id == order_item_id).first()
-    if db_order_items is None:
+    if db_order_item is None:
         raise HTTPException(status_code=404, detail="OrderItem")
     for key, value in order_item.model_dump(exclude_unset=True).items():
         setattr(db_order_items, key, value)
@@ -33,4 +33,4 @@ def delete_order_item(db: Session, order_item_id: int):
         raise HTTPException(status_code=404, detail="OrderItem not found")
     db.delete(db_order_item)
     db.commit()
-    return {"ok": True}
+    return db_order_item
