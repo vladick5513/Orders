@@ -1,7 +1,11 @@
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, func, Text, Float, ForeignKey, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.database import Base
+from fastapi_users.db import SQLAlchemyBaseUserTable
 
+class User(SQLAlchemyBaseUserTable[int], Base):
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    username: Mapped[str] = mapped_column(String, unique=True, nullable=False)
 
 
 class Customers(Base):
