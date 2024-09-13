@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASS: str
     DB_NAME: str
+    VERIFICATION_TOKEN_SECRET: str
+    RESET_PASSWORD_TOKEN_SECRET: str
     ACCESS_TOKEN_LIFETIME: str
 
     @property
