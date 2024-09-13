@@ -1,9 +1,18 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-from sqlalchemy.orm import sessionmaker, declarative_base
-from sqlalchemy import URL, create_engine, text, String
-from src.config import settings
+from sqlalchemy.orm import sessionmaker, DeclarativeBase, declared_attr
+from sqlalchemy import URL, create_engine, text, String, MetaData
+from src.config import naming_convention, settings
+from src.utils.case_converter import camel_case_to_snake_case
 
-Base = declarative_base()
+class Base(DeclarativeBase):
+    __abstract__ = True
+
+    metadata = MetaData(naming_convention=naming_convention)
+
+    @declared_attr.directive
+    def __tablename__(cls) -> str:
+        # Преобразование CamelCase в snake_case для таблиц
+        return f"{camel_case_to_snake_case(cls.__name__)}s"
 
 # sync_engine = create_engine(
 #     url=settings.DATABASE_URL_psycopg,
