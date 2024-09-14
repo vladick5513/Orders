@@ -8,6 +8,7 @@ from api.order_items.views import router as order_items_router
 from api.payments.views import router as payment_router
 from api.shipping.views import router as shipping_router
 from api.auth import router as auth_router
+from api.users import router as users_router
 
 app = FastAPI()
 app.include_router(products_router)
@@ -17,6 +18,7 @@ app.include_router(order_items_router)
 app.include_router(payment_router)
 app.include_router(shipping_router)
 app.include_router(auth_router)
+app.include_router(users_router)
 
 
 
