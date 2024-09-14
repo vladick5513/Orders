@@ -1,9 +1,14 @@
 from api.dependencies.backend import authentication_backend
 from api.dependencies.fastapi_users import fastapi_users
 from fastapi import APIRouter
+from fastapi.params import Depends
+from fastapi.security import HTTPBearer
 from src.schemas.user import UserRead, UserCreate
 
-router = APIRouter(prefix="/auth", tags=["Auth"])
+http_bearer = HTTPBearer(auto_error=False)
+
+router = APIRouter(prefix="/auth", tags=["Auth"], dependencies=[Depends(http_bearer)])
+
 #login
 #logout
 router.include_router(
