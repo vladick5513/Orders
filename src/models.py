@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.database import Base
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
 from src.types.user_id import UserIdType
-from fastapi_users_db_sqlalchemy.access_token import SQLAlchemyBaseAccessTokenTable
+from fastapi_users_db_sqlalchemy.access_token import SQLAlchemyBaseAccessTokenTable, SQLAlchemyAccessTokenDatabase
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
@@ -25,7 +25,7 @@ class AccessToken(Base, SQLAlchemyBaseAccessTokenTable[UserIdType]):
 
     @classmethod
     def get_db(cls, session: "AsyncSession"):
-        return SQLAlchemyUserDatabase(session, AccessToken)
+        return SQLAlchemyAccessTokenDatabase(session, AccessToken)
 
 
 class Customers(Base):
