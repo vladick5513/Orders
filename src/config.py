@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     DB_NAME: str
     VERIFICATION_TOKEN_SECRET: str
     RESET_PASSWORD_TOKEN_SECRET: str
-    ACCESS_TOKEN_LIFETIME: str
+    ACCESS_TOKEN_LIFETIME: int
 
     @property
     def DATABASE_URL_asyncpg(self):
