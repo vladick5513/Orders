@@ -9,13 +9,20 @@ http_bearer = HTTPBearer(auto_error=False)
 
 router = APIRouter(prefix="/auth", tags=["Auth"], dependencies=[Depends(http_bearer)])
 
-#login
-#logout
+#/login
+#/logout
 router.include_router(
     router=fastapi_users.get_auth_router(authentication_backend)
 )
-#register
+#/register
 router.include_router(
     router=fastapi_users.get_register_router(UserRead, UserCreate),
 
+)
+
+#/request-verify-token
+#/verify
+
+router.include_router(
+    router=fastapi_users.get_verify_router(UserRead)
 )
