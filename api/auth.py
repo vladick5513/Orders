@@ -12,7 +12,10 @@ router = APIRouter(prefix="/auth", tags=["Auth"], dependencies=[Depends(http_bea
 #/login
 #/logout
 router.include_router(
-    router=fastapi_users.get_auth_router(authentication_backend)
+    router=fastapi_users.get_auth_router(
+        #requires_verification=True,
+        authentication_backend,
+    )
 )
 #/register
 router.include_router(
