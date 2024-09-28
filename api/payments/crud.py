@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from sqlalchemy.future import select
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from api.payments.schemas import PaymentCreate, PaymentUpdate
@@ -12,13 +13,15 @@ async def create_payment(db: AsyncSession, payment: PaymentCreate):
     return db_payment
 
 async def read_payment(db: AsyncSession, payment_id: int):
-    payment = db.query(Payment).filter(Payment.id == payment_id).first()
+    result = await db.execute(select(Payment).filter(Payment.id==payment_id))
+    payment = result.scalar_one_or_none()
     if payment is None:
         raise HTTPException(status_code=404, detail="Payment not found")
     return payment
 
 async def update_payment(db: AsyncSession, payment_id: int, payment: PaymentUpdate):
-    db_payment = db.query(Payment).filter(Payment.id == payment_id).first()
+    result = await db.execute(select(Payment).filter(Payment.id == payment_id))
+    db_payment = result.scalar_one_or_none()
     if not db_payment:
         return None
     for key, value in payment.dict(exclude_unset=True).items():
@@ -28,7 +31,8 @@ async def update_payment(db: AsyncSession, payment_id: int, payment: PaymentUpda
     return db_payment
 
 async def delete_payment(db: AsyncSession, payment_id: int):
-    db_payment = db.query(Payment).filter(Payment.id == payment_id).first()
+    result = await db.execute(select(Payment).filter(Payment.id == payment_id))
+    db_payment = result.scalar_one_or_none()
     if db_payment is None:
         raise HTTPException(status_code=404, detail="Payment not found")
     await db.delete(db_payment)

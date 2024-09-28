@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from sqlalchemy.future import select
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from api.shipping.schemas  import ShippingCreate, ShippingUpdate
@@ -12,14 +13,16 @@ async def create_shipping(db: AsyncSession, shipping: ShippingCreate):
     return db_shipping
 
 async def read_shipping(db: AsyncSession, shipping_id: int):
-    shipping = db.query(Shipping).filter(Shipping.id == shipping_id).first()
+    result = await db.execute(select(Shipping).filter(Shipping.id==shipping_id))
+    shipping = result.scalar_one_or_none()
     if shipping is None:
         raise HTTPException(status_code=404, detail="Shipping not found")
     return shipping
 
 
 async def update_shipping(db: AsyncSession, shipping_id: int, shipping: ShippingUpdate):
-    db_shipping = db.query(Shipping).filter(Shipping.id == shipping_id).first()
+    result = await db.execute(select(Shipping).filter(Shipping.id == shipping_id))
+    db_shipping = result.scalar_one_or_none()
     if not db_shipping:
         return None
     for key, value in shipping.dict(exclude_unset=True).items():
@@ -29,7 +32,8 @@ async def update_shipping(db: AsyncSession, shipping_id: int, shipping: Shipping
     return db_shipping
 
 async def delete_shipping(db: AsyncSession, shipping_id: int):
-    db_shipping = db.query(Shipping).filter(Shipping.id == shipping_id).first()
+    result = await db.execute(select(Shipping).filter(Shipping.id == shipping_id))
+    db_shipping = result.scalar_one_or_none()
     if db_shipping is None:
         HTTPException(status_code=404, detail="Shipping not found")
     raise db_shipping
