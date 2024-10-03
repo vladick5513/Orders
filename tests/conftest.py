@@ -12,7 +12,8 @@ async_engine_test = create_async_engine(
 )
 
 async_session_factory_test = async_sessionmaker(
-    async_engine_test
+    async_engine_test,
+    expire_on_commit=False
 )
 
 @pytest.fixture(scope="module", autouse=True)
