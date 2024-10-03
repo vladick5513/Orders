@@ -5,7 +5,7 @@ from src.config import settings
 from fastapi import HTTPException
 
 
-@pytest.mark.asycio
+
 async def test_create_product(async_session, setup_db):
     product_data = ProductCreate(
         name="Test Product",
@@ -19,7 +19,7 @@ async def test_create_product(async_session, setup_db):
     assert product.price == 1000
     assert product.stock_quantity == 10
 
-@pytest.mark.asycio
+
 async def test_read_product(async_session):
     product_data = ProductCreate(
         name="Test Product",
@@ -33,7 +33,7 @@ async def test_read_product(async_session):
     assert fetched_product.id == product.id
     assert fetched_product.name == "Test Product"
 
-@pytest.mark.asycio
+
 async def test_update_product(async_session):
     product_data = ProductCreate(
         name="Old Product",
@@ -55,7 +55,6 @@ async def test_update_product(async_session):
     assert updated_product.stock_quantity == 20
 
 
-@pytest.mark.asyncio
 async def test_delete_product(async_session):
     product_data = ProductCreate(
         name="Test Product",
