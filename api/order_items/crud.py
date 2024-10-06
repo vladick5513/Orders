@@ -23,12 +23,12 @@ async def update_order_item(db: AsyncSession, order_item_id: int, order_item: Or
     result = await db.execute(select(OrderItem).filter(OrderItem.id == order_item_id))
     db_order_item = result.scalar_one_or_none()
     if db_order_item is None:
-        raise HTTPException(status_code=404, detail="OrderItem")
+        raise HTTPException(status_code=404, detail="OrderItem not found")
     for key, value in order_item.model_dump(exclude_unset=True).items():
-        setattr(db_order_items, key, value)
-        await db.commit()
-        await db.refresh(db_order_items)
-        return db_order_item
+        setattr(db_order_item, key, value)
+    await db.commit()
+    await db.refresh(db_order_item)
+    return db_order_item
 
 async def delete_order_item(db: AsyncSession, order_item_id: int):
     result = await db.execute(select(OrderItem).filter(OrderItem.id == order_item_id))
