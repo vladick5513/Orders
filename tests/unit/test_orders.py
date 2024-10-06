@@ -7,40 +7,18 @@ from fastapi import HTTPException
 
 
 
-async def test_create_order(async_session):
-    customer_data = CustomerCreate(
-        name="John Doe",
-        email="john@example.com",
-        phone="123456789",
-        address="123 Main Street"
-    )
-    customer = await create_customer(async_session, customer_data)
-    order_data = OrderCreate(
-        customer_id = customer.id,
-        status= "Processing",
-        total_amount=1500
-    )
-    order = await create_order(async_session, order_data)
+async def test_create_order(async_session, setup_customer_and_order):
+    customer, order = setup_customer_and_order
+
     assert order is not None
     assert order.customer_id == customer.id
     assert order.status == "Processing"
     assert order.total_amount == 1500
 
 
-async def test_reade_order(async_session):
-    customer_data = CustomerCreate(
-        name="John Doe",
-        email="doe@example.com",
-        phone="123456789",
-        address="123 Main Street"
-    )
-    customer = await create_customer(async_session, customer_data)
-    order_data = OrderCreate(
-        customer_id=customer.id,
-        status="Processing",
-        total_amount=1500
-    )
-    order = await create_order(async_session, order_data)
+async def test_read_order(async_session, setup_customer_and_order):
+    customer, order = setup_customer_and_order
+
     fetched_order = await read_order(async_session, order.id)
 
     assert fetched_order is not None
@@ -49,22 +27,8 @@ async def test_reade_order(async_session):
     assert fetched_order.status == "Processing"
 
 
-async def test_update_order(async_session):
-    customer_data = CustomerCreate(
-        name="John Doe",
-        email="john32@example.com",
-        phone="123456789",
-        address="123 Main Street"
-    )
-    customer = await create_customer(async_session, customer_data)
-
-
-    order_data = OrderCreate(
-        customer_id=customer.id,
-        status="Processing",
-        total_amount=1500.00
-    )
-    order = await create_order(async_session, order_data)
+async def test_update_order(async_session, setup_customer_and_order):
+    customer, order = setup_customer_and_order
 
     update_data = OrderUpdate(
         status="Completed",
@@ -72,27 +36,13 @@ async def test_update_order(async_session):
     )
     updated_order = await update_order(async_session, order.id, update_data)
 
-    # Проверяем обновление заказа
     assert updated_order is not None
     assert updated_order.status == "Completed"
     assert updated_order.total_amount == 2000.00
 
 
-async def test_delete_order(async_session):
-    customer_data = CustomerCreate(
-        name="John Doe",
-        email="doe99@example.com",
-        phone="123456789",
-        address="123 Main Street"
-    )
-    customer = await create_customer(async_session, customer_data)
-
-    order_data = OrderCreate(
-        customer_id=customer.id,
-        status="Processing",
-        total_amount=1500.00
-    )
-    order = await create_order(async_session, order_data)
+async def test_delete_order(async_session, setup_customer_and_order):
+    customer, order = setup_customer_and_order
 
     await delete_order(async_session, order.id)
 
@@ -101,10 +51,3 @@ async def test_delete_order(async_session):
 
     assert exc_info.value.status_code == 404
     assert exc_info.value.detail == "Order not found"
-
-
-
-
-
-
-
