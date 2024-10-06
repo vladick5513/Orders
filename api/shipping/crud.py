@@ -35,8 +35,7 @@ async def delete_shipping(db: AsyncSession, shipping_id: int):
     result = await db.execute(select(Shipping).filter(Shipping.id == shipping_id))
     db_shipping = result.scalar_one_or_none()
     if db_shipping is None:
-        HTTPException(status_code=404, detail="Shipping not found")
-    raise db_shipping
+        raise HTTPException(status_code=404, detail="Shipping not found")
     await db.delete(db_shipping)
-    await db.commit
+    await db.commit()
     return db_shipping
