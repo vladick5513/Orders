@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, declared_attr
 from sqlalchemy import URL, create_engine, text, String, MetaData
-from src.config import naming_convention, settings
+from src.config import settings, naming_convention
 from src.utils.case_converter import camel_case_to_snake_case
 
 class Base(DeclarativeBase):
@@ -14,12 +14,6 @@ class Base(DeclarativeBase):
         # Преобразование CamelCase в snake_case для таблиц
         return f"{camel_case_to_snake_case(cls.__name__)}s"
 
-# sync_engine = create_engine(
-#     url=settings.DATABASE_URL_psycopg,
-#     echo= True,
-#     pool_size=5,
-#     max_overflow=10
-# )
 
 async_engine = create_async_engine(
     url=settings.DATABASE_URL_asyncpg,
@@ -28,15 +22,14 @@ async_engine = create_async_engine(
     max_overflow=10
 )
 
-#session_factory = sessionmaker(sync_engine)
 async_session_factory = async_sessionmaker(async_engine)
 
-def get_db():
+async def get_db():
     db = async_session_factory()
     try:
         yield db
     finally:
-        db.close()
+        await db.close()
 
 
 
