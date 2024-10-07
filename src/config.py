@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings,SettingsConfigDict
+import os
 
 naming_convention: dict[str, str] = {
         "ix": "ix_%(column_0_label)s",
@@ -18,6 +19,13 @@ class Settings(BaseSettings):
     VERIFICATION_TOKEN_SECRET: str
     RESET_PASSWORD_TOKEN_SECRET: str
     ACCESS_TOKEN_LIFETIME: int
+    DB_HOST_TEST: str
+    DB_PORT_TEST: int
+    DB_USER_TEST: str
+    DB_PASS_TEST: str
+    DB_NAME_TEST: str
+
+
 
     @property
     def DATABASE_URL_asyncpg(self):
@@ -25,13 +33,9 @@ class Settings(BaseSettings):
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     @property
-    def DATABASE_URL_psycopg(self):
-        # DSN
-        # postgresql+psycopg://postgres:postgres@localhost:5432/sa
-        return f"postgresql+psycopg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+    def DATABASE_URL_TEST_asyncpg(self):
+        return f"postgresql+asyncpg://{self.DB_USER_TEST}:{self.DB_PASS_TEST}@{self.DB_HOST_TEST}:{self.DB_PORT_TEST}/{self.DB_NAME_TEST}"
 
-    model_config = SettingsConfigDict(env_file=".env")
+    model_config = SettingsConfigDict(env_file=".env", )
 
 settings = Settings()
-
-
