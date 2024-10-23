@@ -12,6 +12,21 @@ async def read_product(db: AsyncSession, product_id: int):
         raise HTTPException(status_code=404, detail="Product not found")
     return product
 
+async def read_all_products(db: AsyncSession):
+    result = await db.execute(select(Product))
+    products = result.scalars().all()
+    if not products:
+        raise HTTPException(status_code=404, detail="No products found")
+    return products
+
+
+async def read_products_by_price_range(db: AsyncSession, min_price: int, max_price: int):
+    result = await db.execute(select(Product).filter(Product.price.between(min_price, max_price)))
+    products = result.scalars().all()
+    if not products:
+        raise HTTPException(status_code=404, detail=f"No products found in the price range {min_price} - {max_price}")
+    return products
+
 async def create_product(db: AsyncSession, product: ProductCreate):
     db_product = Product(**product.model_dump())
     db.add(db_product)

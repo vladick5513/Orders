@@ -1,9 +1,9 @@
+from datetime import datetime, timedelta
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException
 from src.models import Customers
-from api.customers.schemas import CustomerCreate, CustomerUpdate
-
+from api.customers.schemas import CustomerCreate, CustomerUpdate, CustomerResponse
 
 
 async def create_customer(db: AsyncSession, customer: CustomerCreate):
@@ -12,6 +12,21 @@ async def create_customer(db: AsyncSession, customer: CustomerCreate):
     await db.commit()
     await db.refresh(db_customer)
     return db_customer
+
+async def list_customers(db: AsyncSession):
+    result = await db.execute(select(Customers))
+    customers = result.scalars().all()
+    return customers
+
+
+async def read_customers_registered_recently(db: AsyncSession, days: int):
+    date_threshold = datetime.utcnow() - timedelta(days=days)
+    result = await db.execute(select(Customers).filter(Customers.created_at >= date_threshold))
+    customers = result.scalars().all()
+    if not customers:
+        raise HTTPException(status_code=404, detail=f"No customers found registered in the last {days} days")
+
+    return customers
 
 async def read_customer(db: AsyncSession, customer_id:int):
     result = await db.execute(select(Customers).filter(Customers.id == customer_id))

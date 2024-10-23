@@ -12,6 +12,19 @@ async def create_order_item(db: AsyncSession, order_item: OrderItemCreate):
     await db.refresh(db_order_items)
     return db_order_items
 
+async def read_order_items_by_price_range(db: AsyncSession, min_price: float, max_price: float):
+    result = await db.execute(select(OrderItem).filter(OrderItem.price >= min_price, OrderItem.price <= max_price))
+    order_items = result.scalars().all()
+    return order_items
+
+async def read_order_items_by_quantity(db: AsyncSession, quantity: int):
+    result = await db.execute(select(OrderItem).filter(OrderItem.quantity == quantity))
+    order_items = result.scalars().all()
+    if not order_items:
+        raise HTTPException(status_code=404, detail=f"No OrderItems found with quantity {quantity}")
+    return order_items
+
+
 async def read_order_item(db: AsyncSession, order_item_id: int):
     result = await db.execute(select(OrderItem).filter(OrderItem.id == order_item_id))
     order_item = result.scalar_one_or_none()
