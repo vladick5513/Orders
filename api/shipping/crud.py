@@ -19,6 +19,21 @@ async def read_shipping(db: AsyncSession, shipping_id: int):
         raise HTTPException(status_code=404, detail="Shipping not found")
     return shipping
 
+async def read_all_shippings(db: AsyncSession):
+    result = await db.execute(select(Shipping))
+    shippings = result.scalars().all()
+    if not shippings:
+        raise HTTPException(status_code=404, detail="No shipping records found")
+    return shippings
+
+
+async def read_shippings_by_status(db: AsyncSession, status: str):
+    result = await db.execute(select(Shipping).filter(Shipping.status == status))
+    shippings = result.scalars().all()
+    if not shippings:
+        raise HTTPException(status_code=404, detail=f"No shipping records with status '{status}' found")
+    return shippings
+
 
 async def update_shipping(db: AsyncSession, shipping_id: int, shipping: ShippingUpdate):
     result = await db.execute(select(Shipping).filter(Shipping.id == shipping_id))
