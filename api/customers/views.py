@@ -7,7 +7,7 @@ from api.customers.schemas import CustomerCreate, CustomerUpdate, CustomerRespon
 router = APIRouter(prefix="/customers", tags=["Customers"])
 
 
-@router.post("", response_model=CustomerResponse)
+@router.post("/", response_model=CustomerResponse)
 async def create_customer_endpoint(customer: CustomerCreate, db: AsyncSession = Depends(get_db)):
     return await create_customer(db, customer)
 
